@@ -33,7 +33,7 @@ marumaru.list = function (callback) {
       return {
         link: 'http://marumaru.in' + $(li).find('a').attr('href'),
         image: $(li).find('img').attr('src'),
-        title: $(li).find('strong').text()
+        title: $(li).find('strong').text().trim()
       };
     }));
   });
