@@ -5,8 +5,12 @@ var app = express();
 
 var maru = require('./marumaru');
 
+app.set('view engine', 'jade')
+
+app.use(require('serve-static')('public'));
+
 app.get('/', function (req, res) {
-  res.send('hello, world!');
+  res.render('index');
 });
 
 app.get('/maru/:method', function (req, res) {
