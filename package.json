@@ -1,0 +1,24 @@
+{
+  "name": "marika",
+  "version": "0.0.1",
+  "description": "A good marumaru viewer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/noraesae/marika.git"
+  },
+  "author": "Hyunje Alex Jun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/noraesae/marika/issues"
+  },
+  "homepage": "https://github.com/noraesae/marika",
+  "dependencies": {
+    "cheerio": "^0.17.0",
+    "express": "^4.9.7",
+    "superagent": "^0.20.0"
+  }
+}
