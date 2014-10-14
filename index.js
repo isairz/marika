@@ -25,4 +25,7 @@ app.get('/maru/:method', function (req, res) {
   }
 });
 
-app.listen(2000);
+var server = app.listen(2000, function () {
+  var port = server.address().port;
+  console.log('listening at %s...', port);
+});
