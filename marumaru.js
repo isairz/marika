@@ -19,7 +19,7 @@ function req(link, callback, errorCount, cookie) {
     if (errorCount < maximumRetryCount) {
       req(link, callback, errorCount + 1);
     } else {
-      throw err;
+      console.log(link, err);
     }
   })
   .end(callback);

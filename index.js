@@ -13,6 +13,10 @@ app.get('/', function (req, res) {
   res.render('index');
 });
 
+app.get('/manga', function (req, res) {
+  res.render('manga', {title: req.query.title, link: req.query.link});
+});
+
 app.get('/maru/:method', function (req, res) {
   switch(req.param('method')) {
   case 'list':

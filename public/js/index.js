@@ -16,7 +16,7 @@ var SearchBar = React.createClass({
 var Manga = React.createClass({
   render: function () {
     var backgroundStyle = {backgroundImage: 'url(' + this.props.data.image + ')'};
-    var link = '/manga?link=' + encodeURIComponent(this.props.data.link);
+    var link = '/manga?title=' + this.props.data.title + '&link=' + encodeURIComponent(this.props.data.link);
 
     return (
       <a className="manga" href={link}>

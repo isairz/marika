@@ -1,0 +1,13 @@
+extends layout
+
+block css
+  link(rel='stylesheet', href='/css/manga.css')
+
+block container
+  #app
+
+block script
+  script.
+    var mangaTitle = "#{title}";
+    var mangaLink = "#{link}";
+  script(type='text/jsx', src='/js/manga.js')
