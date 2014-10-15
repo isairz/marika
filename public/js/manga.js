@@ -4,6 +4,7 @@ var EpisodeSelect = React.createClass({
     this.loadEpisode(this.props.episodes.slice().reverse()[0].link);
   },
   loadEpisode: function (link) {
+    $(window).scrollTop(0);
     if (typeof link !== 'string') {
       link = $(this.getDOMNode()).find('option:selected').val();
     }
@@ -46,6 +47,14 @@ var MangaImages = React.createClass({
     var images = this.props.images.map(function (image) {
       return <img src={image} />
     });
+    if (images.length === 0 && this.props.link) {
+      images = (
+        <div className="no-image">
+          <h1>No image... Maybe protected. Please visit the link directly.</h1>
+          <a href={this.props.link}>{this.props.link}</a>
+        </div>
+      );
+    }
     return (
       <div className="images">
         {images}
@@ -56,7 +65,7 @@ var MangaImages = React.createClass({
 
 var Application = React.createClass({
   getInitialState: function () {
-    return {data: null, images: []}
+    return {data: null, images: [], episodeLink: ''}
   },
   componentDidMount: function () {
     var url = '/maru/manga?link=' + this.props.link;
@@ -74,7 +83,7 @@ var Application = React.createClass({
       url: url,
       dataType: 'json',
       success: function (data) {
-        this.setState({images: data});
+        this.setState({images: data, episodeLink: link});
       }.bind(this)
     });
   },
@@ -82,7 +91,7 @@ var Application = React.createClass({
     return (
       <div>
         <NavigationBar title={this.props.title} data={this.state.data} loadEpisode={this.loadEpisode} />
-        <MangaImages images={this.state.images} />
+        <MangaImages images={this.state.images} link={this.state.episodeLink} />
       </div>
     );
   }

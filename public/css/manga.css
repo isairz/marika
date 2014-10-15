@@ -37,3 +37,7 @@
   display: block;
   margin: 2px auto;
 }
+
+#app .images .no-image {
+  text-align: center;
+}
