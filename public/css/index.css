@@ -1,0 +1,62 @@
+#app {
+}
+
+#app .search-bar {
+  padding: 10px 5px 5px;
+}
+
+#app .search-bar input {
+  margin: 0;
+  padding: 5px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  height: 40px;
+  line-height: 30px;
+  font-size: 20px;
+  width: 300px;
+  box-sizing: border-box;
+}
+
+#app .manga-list {
+}
+
+#app .manga-list a.manga {
+  margin: 5px;
+  background-color: #444;
+  color: white;
+  height: 150px;
+  width: 300px;
+  border-radius: 5px;
+  overflow: hidden;
+  float: left;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity linear .2s;
+}
+
+#app .manga-list a.manga:visited {
+  color: white;
+}
+
+#app .manga-list a.manga:hover {
+  opacity: 1;
+}
+
+#app .manga-list a.manga .image {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  background-color: #ff4136;
+  background-size: cover;
+  background-position: center;
+  float: left;
+}
+
+#app .manga-list a.manga .info {
+  margin-left: 150px;
+  padding: 5px;
+}
+
+#app .manga-list a.manga .info .title {
+  font-size: 20px;
+}
