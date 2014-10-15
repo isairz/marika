@@ -42,25 +42,8 @@ var NavigationBar = React.createClass({
 });
 
 var MangaImages = React.createClass({
-  getInitialState: function () {
-    return {data: []};
-  },
-  componentDidUpdate: function () {
-    if (!this.props.link) {
-      return;
-    }
-
-    var url = '/maru/episode?link=' + this.props.link;
-    $.ajax({
-      url: url,
-      dataType: 'json',
-      success: function (data) {
-        this.setState({data: data});
-      }.bind(this)
-    });
-  },
   render: function () {
-    var images = this.state.data.map(function (image) {
+    var images = this.props.images.map(function (image) {
       return <img src={image} />
     });
     return (
@@ -73,7 +56,7 @@ var MangaImages = React.createClass({
 
 var Application = React.createClass({
   getInitialState: function () {
-    return {data: null, episodeLink: null}
+    return {data: null, images: []}
   },
   componentDidMount: function () {
     var url = '/maru/manga?link=' + this.props.link;
@@ -86,13 +69,20 @@ var Application = React.createClass({
     });
   },
   loadEpisode: function (link) {
-    this.setState({episodeLink: link});
+    var url = '/maru/episode?link=' + link;
+    $.ajax({
+      url: url,
+      dataType: 'json',
+      success: function (data) {
+        this.setState({images: data});
+      }.bind(this)
+    });
   },
   render: function () {
     return (
       <div>
         <NavigationBar title={this.props.title} data={this.state.data} loadEpisode={this.loadEpisode} />
-        <MangaImages link={this.state.episodeLink} />
+        <MangaImages images={this.state.images} />
       </div>
     );
   }

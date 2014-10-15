@@ -61,18 +61,38 @@ marumaru.manga = function (link, callback) {
 };
 
 marumaru.episode = function (link, callback) {
-  function reqWithCookie(loaded) {
-    req(link, function (res) {
+  function getEpisode(loaded) {
+    var retryCount = 0;
+    var linkChanged = false;
+    function setCookieOrFinish(res) {
       var cookieRegex = /document\.cookie\.indexOf\('(sucuri_uidc=\w+)'\)/.exec(res.text);
       if (cookieRegex && cookieRegex[1]) {
-        req(link, loaded, 0, cookieRegex[1]);
+        retryCount++;
+        if (retryCount > 3) {
+          if (link.indexOf("www.umaumaru.com") >= 0 && !linkChanged) {
+            link = link.replace("www.umaumaru.com", "www.mangaumaru.com");
+            linkChanged = true;
+            retryCount = 0;
+            req(link, setCookieOrFinish);
+          } else if (link.indexOf("www.mangaumaru.com") >= 0 && !linkChanged) {
+            link = link.replace("www.mangaumaru.com", "www.umaumaru.com");
+            linkChanged = true;
+            retryCount = 0;
+            req(link, setCookieOrFinish);
+          } else {
+            loaded(res);
+          }
+        } else {
+          req(link, setCookieOrFinish, 0, cookieRegex[1]);
+        }
       } else {
         loaded(res);
       }
-    });
+    }
+    req(link, setCookieOrFinish);
   }
 
-  reqWithCookie(function (res) {
+  getEpisode(function (res) {
     var $ = cheerio.load(res.text);
 
     callback(
