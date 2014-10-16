@@ -1,6 +1,7 @@
 'use strict';
 
 var express = require('express');
+var request = require('superagent');
 var app = express();
 
 var maru = require('./marumaru');
@@ -15,6 +16,15 @@ app.get('/', function (req, res) {
 
 app.get('/manga', function (req, res) {
   res.render('manga', {title: req.query.title, link: req.query.link});
+});
+
+app.get('/image-proxy', function (req, res) {
+  request
+  .get(req.query.src + '?' + new Date().getTime())
+  .end(function (image) {
+    res.set(image.headers);
+    res.send(image.body);
+  });
 });
 
 app.get('/maru/:method', function (req, res) {

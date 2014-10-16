@@ -15,7 +15,11 @@ var SearchBar = React.createClass({
 
 var Manga = React.createClass({
   render: function () {
-    var backgroundStyle = {backgroundImage: 'url(' + this.props.data.image + ')'};
+    var imgSrc = this.props.data.image;
+    if (imgSrc.indexOf('marumaru.in') >= 0) {
+      imgSrc = '/image-proxy?src=' + imgSrc;
+    }
+    var backgroundStyle = {backgroundImage: 'url(' + imgSrc + ')'};
     var link = '/manga?title=' + this.props.data.title + '&link=' + encodeURIComponent(this.props.data.link);
 
     return (
