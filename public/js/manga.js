@@ -45,12 +45,12 @@ var NavigationBar = React.createClass({
 var MangaImages = React.createClass({
   imageProxy: function (e, id) {
     var img = $("img[data-reactid='" + id + "']", this.getDOMNode());
-    var src = img.attr('src');
-    img.attr('src', '/image-proxy?src=' + encodeURIComponent(src));
+    var src = img.attr('data-src');
+    img.attr('src', '/image-proxy?src=' + encodeURIComponent(src) + '&ts=' + new Date().getTime());
   },
   render: function () {
     var images = this.props.images.map(function (image) {
-      return <img src={image} onError={this.imageProxy} />
+      return <img src={image} data-src={image} onError={this.imageProxy} />
     }.bind(this));
     if (images.length === 0 && this.props.link) {
       images = (
