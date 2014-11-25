@@ -30,7 +30,7 @@ app.get('/image-proxy', function (req, res) {
 app.get('/maru/:method', function (req, res) {
   switch(req.param('method')) {
   case 'list':
-    maru.list(res.json.bind(res));
+    maru.list(req.query.refresh, res.json.bind(res));
     break;
   case 'manga':
     maru.manga(req.query.link, res.json.bind(res));

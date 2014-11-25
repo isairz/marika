@@ -25,18 +25,27 @@ function req(link, callback, errorCount, cookie) {
   .end(callback);
 }
 
+marumaru.list = function (refresh, callback) {
+  function refreshList(callback) {
+    req('http://marumaru.in/c/1', function (res) {
+      var $ = cheerio.load(res.text);
+      marumaru.list.cachedDate = new Date();
+      marumaru.list.cachedList = [].map.call($('#widget_bbs_review01').find('li'), function (li) {
+        return {
+          link: 'http://marumaru.in' + $(li).find('a').attr('href'),
+          image: $(li).find('img').attr('src'),
+          title: $(li).find('strong').text().trim()
+        };
+      });
+      callback(marumaru.list.cachedList);
+    });
+  };
 
-marumaru.list = function (callback) {
-  req('http://marumaru.in/c/1', function (res) {
-    var $ = cheerio.load(res.text);
-    callback([].map.call($('#widget_bbs_review01').find('li'), function (li) {
-      return {
-        link: 'http://marumaru.in' + $(li).find('a').attr('href'),
-        image: $(li).find('img').attr('src'),
-        title: $(li).find('strong').text().trim()
-      };
-    }));
-  });
+  if (refresh || !marumaru.list.cachedList) {
+    refreshList(callback);
+  } else {
+    callback(marumaru.list.cachedList);
+  }
 };
 
 marumaru.manga = function (link, callback) {
