@@ -15,7 +15,7 @@ var SearchBar = React.createClass({
 
 var Manga = React.createClass({
   render: function () {
-    var imgSrc = this.props.data.image;
+    var imgSrc = this.props.data.image || '';
     if (imgSrc.indexOf('marumaru.in') >= 0) {
       imgSrc = '/image-proxy?src=' + imgSrc;
     }
