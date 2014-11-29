@@ -46,7 +46,7 @@ var MangaImages = React.createClass({
   imageProxy: function (e, id) {
     var img = $("img[data-reactid='" + id + "']", this.getDOMNode());
     var src = img.attr('data-src');
-    img.attr('src', '/image-proxy?src=' + encodeURIComponent(src) + '&ts=' + new Date().getTime());
+    img.attr('src', '/image-proxy?src=' + encodeURIComponent(src));
   },
   render: function () {
     var images = this.props.images.map(function (image) {
