@@ -29,3 +29,7 @@ node_modules
 
 # Mac OS X
 .DS_Store
+
+# Configs
+config.json
+!config.sample.json
