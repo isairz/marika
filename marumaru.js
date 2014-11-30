@@ -2,6 +2,10 @@
 var cheerio = require('cheerio');
 var request = require('request');
 
+var async = require('async');
+var archiver = require('archiver');
+var path = require('path');
+
 var config;
 
 try {
@@ -119,3 +123,27 @@ marumaru.episode = function (link, callback) {
     });
   });
 };
+
+marumaru.episodeToZip = function (link, callback) {
+  var self = this;
+  marumaru.episode(link, function(episode) {
+    var archive = archiver('zip');
+    var images = episode.images;
+    var pageLength = images.length.toString().length;
+    var padZeros = function (idx) {
+      var str = idx.toString();
+      return str.length < pageLength ? padZeros("0" + str) : str;
+    }
+
+    for(var i in images) {
+      var imageStream = request({url: images[i], encoding: null})
+        .on('error', function (err) {
+          err.message = "image link is broken";
+          archive.emit('error', err);
+        });
+      archive.append(imageStream, { name: padZeros(i) + path.extname(images[i]) });
+    }
+    archive.finalize();
+    callback(episode.title + '.zip', archive);
+  });
+}
