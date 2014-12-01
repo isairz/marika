@@ -113,8 +113,9 @@ marumaru.episode = function (link, callback) {
   req(link, function (err, res, body) {
     var $ = cheerio.load(body);
 
-    callback(
-      [].map.call($('article').find('p img'), function (img) { return $(img).attr('data-lazy-src'); })
-    );
+    callback({
+      title: $('#content .entry-title').text().trim(),
+      images: [].map.call($('article').find('p img'), function (img) { return $(img).attr('data-lazy-src'); })
+    });
   });
 };

@@ -88,14 +88,14 @@ var Application = React.createClass({
       url: url,
       dataType: 'json',
       success: function (data) {
-        this.setState({images: data, episodeLink: link});
+        this.setState({title: data.title, images: data.images, episodeLink: link});
       }.bind(this)
     });
   },
   render: function () {
     return (
       <div>
-        <NavigationBar title={this.props.title} data={this.state.data} loadEpisode={this.loadEpisode} />
+        <NavigationBar title={this.state.title} data={this.state.data} loadEpisode={this.loadEpisode} />
         <MangaImages images={this.state.images} link={this.state.episodeLink} />
       </div>
     );
