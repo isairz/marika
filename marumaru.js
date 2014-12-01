@@ -134,6 +134,19 @@ marumaru.episodeToZip = function (link, callback) {
       var str = idx.toString();
       return str.length < pageLength ? padZeros("0" + str) : str;
     }
+    var dirName = function (str) {
+      return str
+        .replace(/</g, '〈')
+        .replace(/>/g, '〉')
+        .replace(/\?/g, '？')
+        .replace(/!/g, '！')
+        .replace(/\"/g, '＂')
+        .replace(/\'/g, '＇')
+        .replace(/\*/g, '＊')
+        .replace(/:/g, '：')
+        .replace(/\//g, '／')
+        .replace(/\\/g, '＼');
+    }
 
     for(var i in images) {
       var imageStream = request({url: images[i], encoding: null})
@@ -144,6 +157,6 @@ marumaru.episodeToZip = function (link, callback) {
       archive.append(imageStream, { name: padZeros(i) + path.extname(images[i]) });
     }
     archive.finalize();
-    callback(episode.title + '.zip', archive);
+    callback(dirName(episode.title) + '.zip', archive);
   });
 }
