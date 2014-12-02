@@ -39,7 +39,9 @@ var req = function () {
   var _req = function (url, callback) {
     function tryRequest(url, callback) {
       requestBase(url, function(err, res, body) {
-        if (body.indexOf('document.cookie=\'sucuri_uidc=') != -1) {
+        if (err) {
+          callback(err, res, body);
+        } else if (body.indexOf('document.cookie=\'sucuri_uidc=') != -1) {
           // sucuri ddos protector
           var cookieRegex = /document\.cookie\.indexOf\('(sucuri_uidc=\w+)'\)/.exec(body);
           jar.setCookie(cookieRegex[1], url);
@@ -73,6 +75,8 @@ var req = function () {
       callback
     );
   }
+
+  _req.requestBase = requestBase;
 
   return _req;
 }();
@@ -119,15 +123,18 @@ marumaru.episode = function (link, callback) {
 
     callback({
       title: $('#content .entry-title').text().trim(),
-      images: [].map.call($('article').find('p img'), function (img) { return $(img).attr('data-lazy-src'); })
+      images: [].map.call($('article').find('p img'), function (img) {
+        var parent = $(img).parent().get(0);
+        return parent.name === 'a' ? parent.attribs['href']
+          : img.attribs('data-lazy-src') || img.attribs('src');
+        })
     });
   });
 };
 
 marumaru.episodeToZip = function (link, callback) {
-  var self = this;
+  var archive = archiver('zip');
   marumaru.episode(link, function(episode) {
-    var archive = archiver('zip');
     var images = episode.images;
     var pageLength = images.length.toString().length;
     var padZeros = function (idx) {
@@ -149,14 +156,15 @@ marumaru.episodeToZip = function (link, callback) {
     }
 
     for(var i in images) {
-      var imageStream = request({url: images[i], encoding: null})
+      var imageStream = req.requestBase({url: images[i], encoding: null})
         .on('error', function (err) {
-          err.message = "image link is broken";
+          archive.abort();
           archive.emit('error', err);
         });
-      archive.append(imageStream, { name: padZeros(i) + path.extname(images[i]) });
+      archive.append(imageStream, { name: padZeros(-~i) + path.extname(images[i]) });
     }
     archive.finalize();
-    callback(dirName(episode.title) + '.zip', archive);
+    callback(dirName(episode.title || encodeURIComponent(link)) + '.zip', archive);
   });
+  return this;
 }

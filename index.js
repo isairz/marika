@@ -43,15 +43,12 @@ app.get('/maru/:method', function (req, res) {
       res
       .attachment(filename)
       .on('close', function () {
-        return res.status(200).send('OK').end();
+        return res.end();
       });
 
       output
       .on('error', function (err) {
-        // FIXME: error handle
-        // test url : http://localhost:2000/maru/download?link=http://www.mangaumaru.com/archives/35905
-        // res.status(500).send({error: err.message});
-        console.error('download fail: ' + req.query.link);
+        console.error('Download fail: ' + req.query.link + '\nError message: ' + err.message);
         res.end();
       })
       .pipe(res);
