@@ -126,7 +126,7 @@ marumaru.episode = function (link, callback) {
       images: [].map.call($('article').find('p img'), function (img) {
         var parent = $(img).parent().get(0);
         return parent.name === 'a' ? parent.attribs['href']
-          : img.attribs('data-lazy-src') || img.attribs('src');
+          : img.attribs['data-lazy-src'] || img.attribs['src'];
         })
     });
   });

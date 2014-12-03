@@ -19,8 +19,7 @@ app.get('/manga', function (req, res) {
 });
 
 app.get('/image-proxy', function (req, res) {
-  req
-  .pipe(request(req.query.src))
+  request(req.query.src)
   .on('error', function (err) {
     res.sendStatus(404);
   })
