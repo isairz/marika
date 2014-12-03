@@ -1,62 +1,100 @@
+body {
+  background: #121211;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  cont-size: 16px;
+}
+
 #app {
+  background: #121211;
+}
+
+#app .header {
+  position: absolute;
+  transition: all .2s linear;
+  border: 0;
+  beight: 45px;
+  background: #2b2b2b;
+  width: 100%;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+}
+
+#app .content {
+  padding-top: 47px;
+  position: relative;
+  overflow-x: hidden;
 }
 
 #app .search-bar {
-  padding: 10px 5px 5px;
 }
 
 #app .search-bar input {
+  font-size: 14px;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  background-color: #121211;
+  width: 97%;
+  color: #fff;
+  border: 0 none;
+  border-radius: 5px;
+  outline: 1px solid #444442;
+  padding: 10px 0 5px 5px;
+  margin: 8px 5px;
+}
+
+#app .listview {
+}
+
+#app .listview ul {
+  list-style: none;
   margin: 0;
-  padding: 5px;
-  border: 1px solid #999;
-  border-radius: 5px;
-  height: 40px;
-  line-height: 30px;
-  font-size: 20px;
-  width: 300px;
-  box-sizing: border-box;
+  padding: 0;
 }
 
-#app .manga-list {
+#app .listview li {
+  position: relative;
+  background: #242424;
+  border-bottom: 1px  solid #121211;
+  border-top: 1px solid #444442;
+  min-height: 110px;
 }
 
-#app .manga-list a.manga {
-  margin: 5px;
-  background-color: #444;
-  color: white;
-  height: 150px;
-  width: 300px;
-  border-radius: 5px;
-  overflow: hidden;
-  float: left;
+#app .listview li:hover, #app .manga-list li:active {
+  background: #121211!important;
+}
+
+#app .listview li a {
   text-decoration: none;
-  opacity: 0.7;
-  transition: opacity linear .2s;
+  transition: all .2s linear;
+  display: inline-block;
+  min-height: 110px;
+  width: 100%;
 }
 
-#app .manga-list a.manga:visited {
-  color: white;
+#app .listview li img {
+  border: 2px solid #444442;
+  width: 100px;
+  height: 100px;
+  background-color: #444442;
+  position: absolute;
+  margin-top: 4px;
+  left: 5px;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
 }
 
-#app .manga-list a.manga:hover {
-  opacity: 1;
-}
-
-#app .manga-list a.manga .image {
-  width: 150px;
-  height: 150px;
-  overflow: hidden;
-  background-color: #ff4136;
-  background-size: cover;
-  background-position: center;
-  float: left;
-}
-
-#app .manga-list a.manga .info {
-  margin-left: 150px;
-  padding: 5px;
-}
-
-#app .manga-list a.manga .info .title {
-  font-size: 20px;
+#app .listview li h3,
+#app .listview li p {
+  font-size: 13px;
+  margin: 15px 55px 0 125px;
+  line-height: 16px;
+  position: relative;
 }

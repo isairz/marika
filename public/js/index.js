@@ -19,16 +19,15 @@ var Manga = React.createClass({
     if (imgSrc.indexOf('marumaru.in') >= 0) {
       imgSrc = '/image-proxy?src=' + imgSrc;
     }
-    var backgroundStyle = {backgroundImage: 'url(' + imgSrc + ')'};
     var link = '/manga?title=' + this.props.data.title + '&link=' + encodeURIComponent(this.props.data.link);
 
     return (
-      <a className="manga" href={link}>
-        <div className="image" style={backgroundStyle} />
-        <div className="info">
-          <div className="title">{this.props.data.title}</div>
-        </div>
-      </a>
+      <li className="manga">
+        <a href={link}>
+          <img src={imgSrc} />
+          <h3 className="title">{this.props.data.title}</h3>
+        </a>
+      </li>
     );
   }
 });
@@ -49,13 +48,16 @@ var MangaList = React.createClass({
   render: function () {
     var mangaNodes = this.state.data.filter(function (manga) {
       return manga.title.toLowerCase().indexOf(this.props.keyword.toLowerCase()) >= 0;
-    }.bind(this)).map(function (manga) {
-      return <Manga data={manga} />
+    }.bind(this))
+    .map(function (manga, idx) {
+      return <Manga key={idx} data={manga} />
     });
 
     return (
-      <div className="manga-list">
-        {mangaNodes}
+      <div className="listview">
+        <ul>
+          {mangaNodes}
+        </ul>
       </div>
     );
   }
@@ -71,8 +73,12 @@ var Application = React.createClass({
   render: function () {
     return (
       <div>
-        <SearchBar search={this.search} />
-        <MangaList url="/maru/list" keyword={this.state.searchKeyword} />
+        <div className="header">
+          <SearchBar search={this.search} />
+        </div>
+        <div className="content">
+          <MangaList url="/maru/list" keyword={this.state.searchKeyword} />
+        </div>
       </div>
     );
   }
