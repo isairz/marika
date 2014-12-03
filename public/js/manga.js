@@ -30,7 +30,7 @@ var NavigationBar = React.createClass({
       <div className="wrapper">
         <div className="title">{this.props.title}</div>
         <div className="episodes">
-          <EpisodeSelect episodes={this.props.data.episodes} loadEpisode={this.props.loadEpisode} />
+          <EpisodeSelect episodes={this.props.data} loadEpisode={this.props.loadEpisode} />
         </div>
       </div>
     );

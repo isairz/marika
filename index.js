@@ -14,10 +14,6 @@ app.get('/', function (req, res) {
   res.render('index');
 });
 
-app.get('/manga', function (req, res) {
-  res.render('manga', {title: req.query.title, link: req.query.link});
-});
-
 app.get('/image-proxy', function (req, res) {
   request(req.query.src)
   .on('error', function (err) {
@@ -26,36 +22,25 @@ app.get('/image-proxy', function (req, res) {
   .pipe(res)
 });
 
-app.get('/maru/:method', function (req, res) {
-  switch(req.param('method')) {
-  case 'list':
-    maru.list(res.json.bind(res));
-    break;
-  case 'manga':
-    maru.manga(req.query.link, res.json.bind(res));
-    break;
-  case 'episode':
-    maru.episode(req.query.link, res.json.bind(res));
-    break;
-  case 'download':
-    maru.episodeToZip(req.query.link, function(filename, output) {
-      res
-      .attachment(filename)
-      .on('close', function () {
-        return res.end();
-      });
+app.get('/api/*', function (req, res) {
+  maru.scrap(req.query.link, res.json.bind(res));
+});
 
-      output
-      .on('error', function (err) {
-        console.error('Download fail: ' + req.query.link + '\nError message: ' + err.message);
-        res.end();
-      })
-      .pipe(res);
+app.get('/download/*', function (req, res) {
+  maru.episodeToZip(req.params[0], function(filename, output) {
+    res
+    .attachment(filename)
+    .on('close', function () {
+      return res.end();
     });
-    break;
-  default:
-    res.sendStatus(404);
-  }
+
+    output
+    .on('error', function (err) {
+      console.error('Download fail: ' + req.query.link + '\nError message: ' + err.message);
+      res.end();
+    })
+    .pipe(res);
+  });
 });
 
 var server = app.listen(2000, function () {

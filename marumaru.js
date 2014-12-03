@@ -81,54 +81,91 @@ var req = function () {
   return _req;
 }();
 
-marumaru.list = function (callback) {
-  req('http://marumaru.in/c/1', function (err, res, body) {
-    var $ = cheerio.load(body);
-    callback([].map.call($('#widget_bbs_review01').find('li'), function (li) {
-      return {
-        link: 'http://marumaru.in' + $(li).find('a').attr('href'),
-        image: $(li).find('img').attr('src'),
-        title: $(li).find('strong').text().trim()
-      };
-    }));
-  });
-};
+var scrapers = [
+  function ($, callback) {
+    var list = $('#widget_bbs_review01');
+    if (!list.length) {
+      callback(undefined);
+      return;
+    }
+    callback({
+      type: 'list',
+      title: 'marumaru',
+      data: [].map.call(list.find('li'), function (li) {
+        var link = 'http://marumaru.in' + $(li).find('a').attr('href');
 
-marumaru.manga = function (link, callback) {
-  req(link, function (err, res, body) {
-    var $ = cheerio.load(body);
-
-    // manipulate
+        return {
+          thumbnail: $(li).find('img').attr('src'),
+          title: $(li).find('strong').text().trim(),
+          link: link
+        };
+      })
+    })
+  },
+  function ($, callback) {
     var content = $('#vContent');
+    if (!content.length) {
+      callback(undefined);
+      return;
+    }
+    // manipulate
     content.children('.snsbox').remove();
     content.children().last().remove();
 
+    // FIXME: thumbnail.
+    var image = content.find('img')[0];
+    var thumbnail = image ? image.attribs['src'] : '';
+
     callback({
-      images: [].map.call(content.find('img'), function (img) { return $(img).attr('src'); }),
-      episodes: [].map.call(content.find('a'), function (link) {
-          return {
-            title: $(link).text().trim(),
-            link: $(link).attr('href')
-          };
-        }).filter(function (episode) { return episode.title; })
+      type: 'list',
+      title: '[' + $("head meta[name=classification]").attr('content') + '] ' + $("head meta[name=subject]").attr('content'),
+      data: [].map.call(content.find('a'), function (link) {
+        return {
+          thumbnail: thumbnail,
+          title: $(link).text().trim(),
+          link: $(link).attr('href')
+        }
+      }).filter(function (episode) { return episode.title; }).reverse()
     });
-  });
-};
-
-marumaru.episode = function (link, callback) {
-  link = link.replace("www.umaumaru.com", "www.mangaumaru.com");
-
-  req(link, function (err, res, body) {
-    var $ = cheerio.load(body);
+  },
+  function ($, callback) {
+    var content = $('article p');
+    if (!content.length) {
+      callback(undefined);
+      return;
+    }
 
     callback({
+      type: 'manga',
       title: $('#content .entry-title').text().trim(),
-      images: [].map.call($('article').find('p img'), function (img) {
+      images: [].map.call(content.find('img'), function (img) {
         var parent = $(img).parent().get(0);
         return parent.name === 'a' ? parent.attribs['href']
           : img.attribs['data-lazy-src'] || img.attribs['src'];
         })
     });
+  }
+];
+
+marumaru.scrap = function (link, callback) {
+  link = decodeURIComponent(link);
+  link = link.replace("www.umaumaru.com", "www.mangaumaru.com");
+  req(link, function (err, res, body) {
+    if (err) {
+      console.error(err);
+      callback(undefined);
+    }
+    var $ = cheerio.load(body);
+    function next(idx) {
+      scrapers[idx]($, function (result) {
+        if (result === undefined && idx+1 < scrapers.length) {
+          next(idx+1);
+        } else {
+          callback(result);
+        }
+      });
+    }
+    next(0);
   });
 };
 

@@ -98,3 +98,11 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 16px;
   position: relative;
 }
+
+#app .images img {
+  display: block;
+  margin: 2px auto;
+  border: #444442 solid 2px 0px;
+  max-width: 100%;
+  min-height: 10%;
+}
