@@ -56,27 +56,53 @@ var MangaList = React.createClass({
   }
 });
 
-var MangaViewer = React.createClass({
+var MangaPage = React.createClass({
   imageProxy: function (e, id) {
-    var img = $("img[data-reactid='" + id + "']", this.getDOMNode());
-    var src = img.attr('data-src');
-    img.attr('src', '/image-proxy?src=' + encodeURIComponent(src));
+    var img = this.getDOMNode();
+    console.log(img.attribs);
+    var src = img.getAttribute('data-src');
+    img.src = '/image-proxy?src=' + encodeURIComponent(src);
   },
   render: function () {
-    var images = this.props.data.images.map(function (image) {
-      return <img src={image} data-src={image} onError={this.imageProxy} />
-    }.bind(this));
+    return <img src={this.props.src} data-src={this.props.src} onError={this.props.src && this.imageProxy} style={{right: this.props.page*100 + '%'}} />;
+  }
+})
+
+var MangaViewer = React.createClass({
+  getInitialState: function () {
+    return {page: 0};
+  },
+  prevPage: function () {
+    if (this.state.page <= 0) {
+      return;
+    }
+    this.setState({page: this.state.page-1});
+  },
+  nextPage: function () {
+    if (this.state.page >= this.props.data.images.length-1) {
+      return;
+    }
+    this.setState({page: this.state.page+1});
+  },
+  render: function () {
+    var images = this.props.data.images;
     if (images.length === 0 && this.props.link) {
-      images = (
+      return
         <div className="no-image">
           <h1>No image... Maybe protected. Please visit the link directly.</h1>
           <a href={this.props.link}>{this.props.link}</a>
         </div>
-      );
     }
     return (
-      <div className="images">
-        {images}
+      <div className="mangaview">
+        <div className="slider" style={{transform: 'translate3d('+this.state.page*100+'%' + ', 0, 0)'}} >
+          <MangaPage page={this.state.page} src={images[this.state.page]} />
+          <MangaPage page={this.state.page+1} src={images[this.state.page+1]} />
+          <MangaPage page={this.state.page-1} src={images[this.state.page-1]} />
+          <MangaPage page={this.state.page+2} src={images[this.state.page+2]} />
+        </div>
+        <div className="prev" onClick={this.prevPage} />
+        <div className="next" onClick={this.nextPage} />
       </div>
     );
   }
@@ -145,7 +171,4 @@ var Application = React.createClass({
 });
 
 
-React.renderComponent(
-  <Application />,
-  $('#app').get(0)
-);
+React.render(<Application className="app" />, document.body);

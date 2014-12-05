@@ -9,11 +9,12 @@ h1, h2, h3, h4, h5, h6 {
   cont-size: 16px;
 }
 
-#app {
+.app {
   background: #121211;
+  height: auto;
 }
 
-#app .header {
+.header {
   position: absolute;
   transition: all .2s linear;
   border: 0;
@@ -25,16 +26,16 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
 }
 
-#app .content {
+.content {
   padding-top: 47px;
   position: relative;
   overflow-x: hidden;
 }
 
-#app .search-bar {
+.search-bar {
 }
 
-#app .search-bar input {
+.search-bar input {
   font-size: 14px;
   border-radius: 0;
   -moz-border-radius: 0;
@@ -49,16 +50,16 @@ h1, h2, h3, h4, h5, h6 {
   margin: 8px 5px;
 }
 
-#app .listview {
+.listview {
 }
 
-#app .listview ul {
+.listview ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-#app .listview li {
+.listview li {
   position: relative;
   background: #242424;
   border-bottom: 1px  solid #121211;
@@ -66,11 +67,11 @@ h1, h2, h3, h4, h5, h6 {
   min-height: 110px;
 }
 
-#app .listview li:hover, #app .manga-list li:active {
+.listview li:hover, .manga-list li:active {
   background: #121211!important;
 }
 
-#app .listview li a {
+.listview li a {
   text-decoration: none;
   transition: all .2s linear;
   display: inline-block;
@@ -78,7 +79,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
 }
 
-#app .listview li img {
+.listview li img {
   border: 2px solid #444442;
   width: 100px;
   height: 100px;
@@ -91,18 +92,56 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-border-radius: 2px;
 }
 
-#app .listview li h3,
-#app .listview li p {
+.listview li h3,
+.listview li p {
   font-size: 13px;
   margin: 15px 55px 0 125px;
   line-height: 16px;
   position: relative;
 }
 
-#app .images img {
+.mangaview {
+  width: 100%;
+  height: auto;
+}
+
+.mangaview .slider {
   display: block;
-  margin: 2px auto;
-  border: #444442 solid 2px 0px;
-  max-width: 100%;
-  min-height: 10%;
+  transform: translate3d(0px, 0, 0);
+  transition: transform 0.3s linear;
+  width:100%;
+  height: auto;
+}
+
+.mangaview .slider > img {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  min-height: 110px;
+  position: absolute;
+  top:0;
+  right:0;
+}
+
+.mangaview .slider > img:nth-child(1) {
+  position: relative;
+  display: block;
+}
+
+.mangaview .prev {
+  width: 10%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.mangaview .next {
+  width: 90%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 10%;
+  z-index: 1;
 }
