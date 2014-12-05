@@ -90,19 +90,42 @@ var Application = React.createClass({
   search: function (keyword) {
     this.setState({searchKeyword: keyword});
   },
+  initUrl: function () {
+    return location.search.indexOf('?link=http') === 0
+      ? decodeURIComponent(location.search.substr(6)) : 'http://marumaru.in/c/1';
+  },
   load: function (url) {
+    url = encodeURIComponent(url || this.initUrl());
+    if (history.state) {
+      history.pushState(null, '', location.origin + '/?link=' + url);
+    }
     $.ajax({
-      url: '/api/?link=' + encodeURIComponent(url),
+      url: '/api/?link=' + url,
       dataType: 'json',
       success: function (data) {
         this.setState({searchKeyword:'', data: data});
+        history.replaceState(this.state, data.title, location.origin + '/?link=' + url);
       }.bind(this)
     });
   },
+  onPopState: function (e) {
+    if (e.state) {
+      this.setState(e.state);
+    } else {
+      load();
+    }
+  },
   componentWillMount: function () {
-    this.load('http://marumaru.in/c/1');
+  },
+  componentDidMount: function () {
+    this.load();
+    window.addEventListener('popstate', this.onPopState);
+  },
+  componentWillUnmount: function () {
+    window.removeEventListener('popstate', this.onPopState);
   },
   render: function () {
+    scrollTo(0, 0);
     if (this.state.data.type === 'list') {
       var content = <MangaList keyword={this.state.searchKeyword} load={this.load} data={this.state.data.data}/>
     } else if (this.state.data.type === 'manga') {
